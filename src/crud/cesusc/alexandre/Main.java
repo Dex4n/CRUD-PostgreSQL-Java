@@ -107,7 +107,6 @@ public class Main {
         } while (!opcao.equals("9"));
     }
 	
-	/*Início Está atualizado para o DB de Transportadora*/
 	private static void cadastrarCliente() {
 		
 		Connection conn = null;
@@ -137,9 +136,7 @@ public class Main {
 		}
 
 	}
-	/*Fim Está atualizado para o DB de Transportadora*/
-	
-	/*Início Está atualizado para o DB de Transportadora*/
+
 	private static void cadastrarMercadoria() {
 		
 		Connection conn = null;
@@ -169,9 +166,7 @@ public class Main {
 			JOptionPane.showMessageDialog(null,"Erro durante o cadastro");
 		}
 	}
-	/*Fim Está atualizado para o DB de Transportadora*/
-	
-	/*Início Está atualizado para o DB de Transportadora*/
+
 	private static void cadastrarFornecedor() {
 		
 		Connection conn = null;
@@ -199,12 +194,10 @@ public class Main {
 			JOptionPane.showMessageDialog(null,"Erro durante o cadastro");
 		}
 	}
-	/*Fim Está atualizado para o DB de Transportadora*/
-	
-	
+
 	private static void listarCadastros() {
 
-        String relatoriocliente = " ";
+       String relatoriocliente = " ";
         String relatoriomercadoria = " ";
         String relatoriofornecedor = " ";
 
