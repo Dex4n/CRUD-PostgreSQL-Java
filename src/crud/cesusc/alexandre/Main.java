@@ -6,7 +6,6 @@ import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.*;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 
 public class Main {
@@ -26,21 +25,21 @@ public class Main {
 
             Cliente cadastro = clientes.get(i);
 
-            relatoriocliente += cadastro.getNome() + " - " + cadastro.getCpf() + " ; ";
+            relatoriocliente += cadastro.getNome() + " - " + cadastro.getCpf() + " ;\n";
         }
         
         for (int i = 0; i < mercadorias.size(); i++){
 
             Mercadoria cadastro = mercadorias.get(i);
 
-            relatoriomercadoria += cadastro.getNomemercadoria() + " - " + cadastro.getPeso() + " ; ";
+            relatoriomercadoria += cadastro.getNomemercadoria() + " - " + cadastro.getPeso() + " ;\n";
         }
         
         for (int i = 0; i < fornecedores.size(); i++){
 
             Fornecedor cadastro = fornecedores.get(i);
 
-            relatoriofornecedor += cadastro.getNomefornecedor() + " ; ";
+            relatoriofornecedor += cadastro.getNomefornecedor() + " ;\n";
         }
 
         try {
@@ -70,7 +69,10 @@ public class Main {
                 + "\n 6) Alterar cadastro (mercadoria)"
                 + "\n 7) Alterar cadastro (fornecedor)"
                 + "\n 8) Apagar cadastros"
-                + "\n 9) Sair";
+                + "\n 9) Listar registros de (cliente)"
+                + "\n 10) Listar registros de (mercadoria)"
+                + "\n 11) Listar registros de (fornecedor)"
+                + "\n 0) Sair";
 		
 		String opcao = " ";
 		
@@ -102,11 +104,21 @@ public class Main {
                 apagarCadastro();
             }
             if (opcao.equals("9")) {
+            	listarRegistrosCliente();
+            }
+            if (opcao.equals("10")) {
+            	listarRegistrosMercadoria();
+            }
+            if (opcao.equals("11")) {
+            	listarRegistrosFornecedor();
+            }
+            if (opcao.equals("0")) {
                 salvarCadastro();
+                System.exit(0);
             }
 
 
-        } while (!opcao.equals("9"));
+        } while (!opcao.equals("0"));
     }
 	
 	private static void cadastrarCliente() {
@@ -187,6 +199,7 @@ public class Main {
 			pst = conn.prepareStatement("INSERT into public.fornecedor(nomefornecedor) values(?)");
 			
 			pst.setString(1, nomeFornecedor);
+			
 			pst.executeUpdate();
 			
 			System.out.println("Cadastro realizado com sucesso");
@@ -196,6 +209,89 @@ public class Main {
 			JOptionPane.showMessageDialog(null,"Erro durante o cadastro");
 		}
 	}
+	
+	private static void listarRegistrosCliente() {
+		
+		Connection conn = null;
+		PreparedStatement pst = null;
+		
+		try {
+			
+			conn = Conexao.getConnection();
+			
+			pst = conn.prepareStatement("SELECT nomecliente, cpfcliente FROM cliente");
+			
+			ResultSet rs = pst.executeQuery();
+			
+			while(rs.next()){
+			    String nomecliente = rs.getString("nomecliente"); 
+			    String cpfcliente = rs.getString("cpfcliente");
+			    
+			    JOptionPane.showMessageDialog(null, "Nome do cliente: " + nomecliente + " | CPF do cliente: " + cpfcliente + "\n");  
+			}
+			
+			System.out.println("Obtenção das informações realizado com sucesso");
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"Erro durante a obtenção das informações");
+		}
+	}
+	
+	private static void listarRegistrosFornecedor() {
+		
+		Connection conn = null;
+		PreparedStatement pst = null;
+		
+		try {
+			
+			conn = Conexao.getConnection();
+			
+			pst = conn.prepareStatement("SELECT nomefornecedor FROM fornecedor");
+			
+			ResultSet rs = pst.executeQuery();
+			
+			while(rs.next()){
+			    String nomefornecedor = rs.getString("nomefornecedor"); 
+
+			    JOptionPane.showMessageDialog(null, "Nome do fornecedor: " + nomefornecedor + "\n");  
+			}
+			
+			System.out.println("Obtenção das informações realizado com sucesso");
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"Erro durante a obtenção das informações");
+		}
+	}
+
+	private static void listarRegistrosMercadoria() {
+	
+	Connection conn = null;
+	PreparedStatement pst = null;
+	
+	try {
+		
+		conn = Conexao.getConnection();
+		
+		pst = conn.prepareStatement("SELECT nomemercadoria, pesomercadoria FROM mercadoria");
+
+		ResultSet rs = pst.executeQuery();
+		
+		while(rs.next()){
+		    String nomemercadoria = rs.getString("nomemercadoria"); 
+		    String pesomercadoria = rs.getString("pesomercadoria");
+
+		    JOptionPane.showMessageDialog(null, "Nome da mercadoria: " + nomemercadoria + " | Peso da mercadoria: " + pesomercadoria + "\n");  
+		}
+		
+		System.out.println("Obtenção das informações realizado com sucesso");
+		
+	}catch (Exception e) {
+		e.printStackTrace();
+		JOptionPane.showMessageDialog(null,"Erro durante a obtenção das informações");
+	}
+}
 	
 	private static void listarCadastros() {
 
@@ -368,8 +464,6 @@ public class Main {
 		Connection connMercadoria = null;
 		Connection connFornecedor = null;
 		
-		
-		
 		PreparedStatement pstCliente = null;
 		PreparedStatement pstMercadoria = null;
 		PreparedStatement pstFornecedor = null;
@@ -379,7 +473,6 @@ public class Main {
  			connCliente = Conexao.getConnection();
  			connMercadoria = Conexao.getConnection();
  			connFornecedor = Conexao.getConnection();
- 			
  			
  			pstCliente = connCliente.prepareStatement("DELETE FROM cliente");
  			pstMercadoria = connMercadoria.prepareStatement("DELETE FROM mercadoria");
