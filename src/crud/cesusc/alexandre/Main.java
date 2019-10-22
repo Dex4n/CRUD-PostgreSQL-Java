@@ -4,7 +4,9 @@ import java.io.*;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
+import java.sql.*;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 
 public class Main {
@@ -194,10 +196,10 @@ public class Main {
 			JOptionPane.showMessageDialog(null,"Erro durante o cadastro");
 		}
 	}
-
+	
 	private static void listarCadastros() {
 
-       String relatoriocliente = " ";
+        String relatoriocliente = " ";
         String relatoriomercadoria = " ";
         String relatoriofornecedor = " ";
 
@@ -253,11 +255,13 @@ public class Main {
         			
         			conn = Conexao.getConnection();
         			
-        			pst = conn.prepareStatement("UPDATE public.cliente SET nomecliente = '?'  WHERE nomeCliente = '?'");
+        			pst = conn.prepareStatement("UPDATE public.cliente SET nomecliente = '?'  WHERE nomecliente = '?'");
         			
         			
         			pst.setString(1, nomeCliente);
-        			///pst.setString(2, cadastroProvisorio);	
+        			
+        			///pst.setString(2, cadastroProvisorio);
+        			 	
         			
         			pst.executeUpdate();
         			
@@ -360,18 +364,30 @@ public class Main {
 	
 	private static void apagarCadastro(){
 		
-		Connection conn = null;
-		PreparedStatement pst = null;
+		Connection connCliente = null;
+		Connection connMercadoria = null;
+		Connection connFornecedor = null;
+		
+		
+		
+		PreparedStatement pstCliente = null;
+		PreparedStatement pstMercadoria = null;
+		PreparedStatement pstFornecedor = null;
 		
         try {
 			
- 			conn = Conexao.getConnection();
+ 			connCliente = Conexao.getConnection();
+ 			connMercadoria = Conexao.getConnection();
+ 			connFornecedor = Conexao.getConnection();
  			
- 			pst = conn.prepareStatement("DELETE FROM public.cliente;");
- 			pst = conn.prepareStatement("DELETE FROM public.mercadoria;");
- 			pst = conn.prepareStatement("DELETE FROM public.fornecedor;");
  			
- 			pst.executeUpdate();
+ 			pstCliente = connCliente.prepareStatement("DELETE FROM cliente");
+ 			pstMercadoria = connMercadoria.prepareStatement("DELETE FROM mercadoria");
+ 			pstFornecedor = connFornecedor.prepareStatement("DELETE FROM fornecedor");
+ 			
+ 			pstCliente.executeUpdate();
+ 			pstMercadoria.executeUpdate();
+ 			pstFornecedor.executeUpdate();
  			
  			System.out.println("Cadastros removidos com sucesso");
  			
